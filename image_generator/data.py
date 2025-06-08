@@ -3,6 +3,7 @@ from pathlib import Path
 import torch
 from PIL import Image
 
+# Assumes 'data' directory is at the project root, sibling to 'image_generator'
 DATASET_PATH = Path(__file__).parent.parent / "data"
 
 
@@ -34,10 +35,12 @@ class ImageDataset:
 
 class TokenDataset(torch.utils.data.TensorDataset):
     def __init__(self, split: str):
-        tensor_path = DATASET_PATH / f"tokenized_{split}.pth"
+        # Updated path to look for tokens in a dedicated subdirectory
+        tensor_path = DATASET_PATH / "tokens" / f"tokenized_{split}.pth"
         if not tensor_path.exists():
             raise FileNotFoundError(
-                f"Tokenized dataset not found at {tensor_path}. Create it following the assignment instructions."
+                f"Tokenized dataset not found at {tensor_path}. "
+                "Create it by running the `tokenize.py` script as described in the README."
             )
         self.data = torch.load(tensor_path, weights_only=False)
 
